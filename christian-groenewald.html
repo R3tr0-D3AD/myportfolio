@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Christian Groenewald — Business Management student, ex-competitive gymnast and certified coach based in Pretoria.">
+<meta name="theme-color" content="#060606">
+<title>Christian Groenewald</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@300;400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CHRISTIAN GROENEWALD — style.css
+   Add this in WordPress: Appearance > Customize > Additional CSS
+   OR upload as a file and enqueue in your child theme
+   ============================================================ */
+
+/* fonts loaded via <link> tag */
+
+:root {
+  --bg: #060606;
+  --ink: #f2f0eb;
+  --accent: #c8f53e;
+  --muted: #3a3a3a;
+  --mid: #888;
+  --border: rgba(242,240,235,0.07);
+  --surface: #0f0f0f;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.cg-cursor-active {
+  cursor: none;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Syne', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ===================== LOADER ===================== */
+#cg-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.cg-loader-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(26px, 7vw, 90px);
+  letter-spacing: 0.12em;
+  overflow: hidden;
+}
+
+.cg-loader-name span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.cg-loader-bar-wrap {
+  width: min(220px, 60vw);
+  height: 1px;
+  background: var(--muted);
+  position: relative;
+  overflow: hidden;
+}
+
+.cg-loader-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--accent);
+  width: 0;
+  transition: width 0.2s;
+}
+
+.cg-loader-pct {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--mid);
+  font-weight: 400;
+}
+
+/* ===================== CURSOR ===================== */
+#cg-cur-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.25s, height 0.25s;
+  display: none;
+}
+
+#cg-cur-ring {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(200,245,62,0.35);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.3s,
+              width 0.4s cubic-bezier(0.16,1,0.3,1),
+              height 0.4s cubic-bezier(0.16,1,0.3,1);
+  display: none;
+}
+
+#cg-cur-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9997;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 6px 12px;
+  border-radius: 2px;
+  transform: translate(16px, 16px);
+  opacity: 0;
+  transition: opacity 0.2s;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: none;
+}
+
+body.cg-cursor-active #cg-cur-dot,
+body.cg-cursor-active #cg-cur-ring,
+body.cg-cursor-active #cg-cur-label {
+  display: block;
+}
+
+body.cg-cursor-active.cur-big #cg-cur-dot  { width: 0; height: 0; }
+body.cg-cursor-active.cur-big #cg-cur-ring  { width: 80px; height: 80px; border-color: rgba(200,245,62,0.6); }
+body.cg-cursor-active.cur-link #cg-cur-ring { width: 56px; height: 56px; border-color: rgba(200,245,62,0.5); }
+
+/* ===================== SCROLL PROGRESS ===================== */
+#cg-sprog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9000;
+  background: transparent;
+}
+
+#cg-sprogf {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent), 0 0 4px var(--accent);
+  transition: width 0.05s linear;
+}
+
+/* ===================== NAV ===================== */
+#cg-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  padding: 32px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: padding 0.4s, background 0.4s;
+}
+
+#cg-nav.compact {
+  padding: 18px 64px;
+  background: rgba(6,6,6,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.cg-nav-mark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  text-decoration: none;
+  z-index: 510;
+  position: relative;
+}
+
+.cg-nav-mark em { color: var(--accent); font-style: normal; }
+
+.cg-nav-links {
+  display: flex;
+  gap: 48px;
+  list-style: none;
+  align-items: center;
+}
+
+.cg-nav-links a {
+  color: var(--mid);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.cg-nav-links a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+
+.cg-nav-links a:hover { color: var(--ink); }
+.cg-nav-links a:hover::before { width: 100%; }
+
+.cg-nav-cta {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.2em !important;
+  color: var(--bg) !important;
+  background: var(--accent) !important;
+  padding: 12px 28px !important;
+  border-radius: 2px;
+  transition: background 0.2s !important;
+}
+.cg-nav-cta::before { display: none !important; }
+.cg-nav-cta:hover { background: #b0db2a !important; color: var(--bg) !important; }
+
+/* ===================== HAMBURGER ===================== */
+.cg-burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 510;
+  position: relative;
+}
+
+.cg-burger span {
+  display: block;
+  width: 26px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
+}
+
+.cg-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.cg-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.cg-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ===================== MOBILE MENU ===================== */
+#cg-mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 490;
+  background: rgba(6,6,6,0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+
+#cg-mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#cg-mobile-menu a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(38px, 10vw, 58px);
+  letter-spacing: 0.08em;
+  color: var(--mid);
+  text-decoration: none;
+  transition: color 0.2s, letter-spacing 0.3s;
+  padding: 8px 0;
+}
+
+#cg-mobile-menu a:hover,
+#cg-mobile-menu a:active {
+  color: var(--accent);
+  letter-spacing: 0.12em;
+}
+
+/* ===================== HERO ===================== */
+#cg-hero {
+  height: 100vh;
+  min-height: 580px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+#cg-hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cg-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 0 64px;
+  width: 100%;
+}
+
+.cg-hero-pre {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.cg-hero-pre-line {
+  width: 36px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.cg-hero-pre span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cg-hero-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(60px, 12vw, 170px);
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  margin-bottom: 48px;
+}
+
+.cg-hero-h1-row { overflow: hidden; }
+
+.cg-hero-h1-row span {
+  display: block;
+  transform: translateY(110%);
+}
+
+.cg-hero-h1-row:nth-child(2) span {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(242,240,235,0.2);
+}
+
+.cg-accent-fill {
+  color: var(--accent) !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+.cg-hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.cg-hero-desc {
+  max-width: 420px;
+  font-size: 15px;
+  color: var(--mid);
+  line-height: 1.85;
+}
+
+.cg-hero-desc strong { color: var(--ink); font-weight: 400; }
+
+.cg-hero-ctas {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cg-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 40px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.2s, color 0.2s, box-shadow 0.2s;
+  border: none;
+  outline: none;
+}
+
+.cg-btn-primary { background: var(--accent); color: var(--bg); }
+.cg-btn-primary:hover { background: #b8e030; box-shadow: 0 8px 30px rgba(200,245,62,0.25); }
+
+.cg-btn-ghost { color: var(--mid); border: 1px solid var(--border); background: transparent; }
+.cg-btn-ghost:hover { color: var(--ink); border-color: rgba(242,240,235,0.25); }
+
+.cg-hero-scroll {
+  position: absolute;
+  bottom: 48px;
+  left: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+  opacity: 0;
+}
+
+.cg-scroll-line {
+  width: 1px;
+  height: 64px;
+  background: linear-gradient(to bottom, var(--accent) 0%, transparent 100%);
+  animation: cgScrollDrop 2s ease-in-out infinite;
+}
+
+@keyframes cgScrollDrop {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50%       { transform: scaleY(0.4); opacity: 0.4; }
+}
+
+.cg-hero-scroll span {
+  writing-mode: vertical-lr;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ===================== MARQUEE ===================== */
+.cg-mq-wrap {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--accent);
+  padding: 18px 0;
+  overflow: hidden;
+}
+
+.cg-mq-inner {
+  display: flex;
+  width: max-content;
+  animation: cgMq 22s linear infinite;
+}
+
+.cg-mq-inner:hover { animation-play-state: paused; }
+
+.cg-mq-item {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 0 48px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  color: rgba(6,6,6,0.65);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.cg-mq-dot {
+  width: 5px;
+  height: 5px;
+  background: rgba(6,6,6,0.3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@keyframes cgMq {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ===================== SECTION BASE ===================== */
+.cg-section { padding: 160px 64px; }
+
+.cg-s-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 80px;
+}
+
+.cg-s-label-line {
+  width: 36px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.cg-s-label span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cg-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 100px);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+}
+
+/* ===================== REVEAL ===================== */
+.cg-fade {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.cg-fade.in { opacity: 1; transform: translateY(0); }
+.cg-d1 { transition-delay: 0.1s; }
+.cg-d2 { transition-delay: 0.2s; }
+.cg-d3 { transition-delay: 0.3s; }
+.cg-d4 { transition-delay: 0.4s; }
+
+/* ===================== ABOUT ===================== */
+#cg-about { background: var(--bg); }
+
+.cg-about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.cg-about-sticky {
+  position: sticky;
+  top: 140px;
+}
+
+.cg-about-text { color: var(--mid); line-height: 1.9; font-size: 15px; }
+.cg-about-text p { margin-bottom: 18px; }
+.cg-about-text strong { color: var(--ink); font-weight: 400; }
+
+.cg-about-pull {
+  margin-top: 48px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  background: rgba(200,245,62,0.02);
+}
+
+.cg-about-pull p {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+/* Timeline */
+.cg-timeline { display: flex; flex-direction: column; }
+
+.cg-tl-item {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: background 0.3s;
+}
+.cg-tl-item:first-child { border-top: 1px solid var(--border); }
+.cg-tl-item::before {
+  content: '';
+  position: absolute;
+  left: 66px; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.cg-tl-item:hover { background: rgba(200,245,62,0.015); }
+
+.cg-tl-dot {
+  position: absolute;
+  left: 62px;
+  top: 44px;
+  width: 9px;
+  height: 9px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  z-index: 1;
+  transition: background 0.3s;
+}
+.cg-tl-item:hover .cg-tl-dot { background: var(--accent); }
+
+.cg-tl-year { font-size: 11px; letter-spacing: 0.2em; color: var(--accent); font-weight: 500; padding-top: 4px; }
+.cg-tl-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; margin-bottom: 8px; line-height: 1; }
+.cg-tl-desc { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+/* ===================== STATS ===================== */
+#cg-stats {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 120px 64px;
+}
+
+.cg-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.cg-stat-block {
+  padding: 56px 40px;
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+}
+.cg-stat-block:last-child { border-right: none; }
+.cg-stat-block::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--accent);
+  transition: width 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.cg-stat-block:hover::after { width: 100%; }
+.cg-stat-block:hover { background: rgba(200,245,62,0.025); }
+
+.cg-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(50px, 6vw, 88px);
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.cg-stat-suf {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--accent);
+  opacity: 0.4;
+}
+.cg-stat-label { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+.cg-stat-sub { font-size: 12px; color: var(--mid); margin-top: 12px; line-height: 1.6; max-width: 180px; }
+
+/* ===================== PORTFOLIO ===================== */
+#cg-portfolio { background: var(--bg); }
+
+.cg-port-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 80px;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.cg-port-note { font-size: 13px; color: var(--mid); max-width: 260px; line-height: 1.7; text-align: right; }
+
+.cg-port-list { display: flex; flex-direction: column; gap: 2px; }
+
+.cg-port-item {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 48px;
+  padding: 40px 48px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  cursor: pointer;
+}
+.cg-port-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(200,245,62,0.03);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.cg-port-item:hover::before { transform: scaleX(1); }
+.cg-port-item:hover { border-color: rgba(200,245,62,0.2); }
+
+.cg-port-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.15em; color: var(--muted); transition: color 0.3s; }
+.cg-port-item:hover .cg-port-num { color: var(--accent); }
+.cg-port-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.cg-port-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; transition: letter-spacing 0.4s; }
+.cg-port-item:hover .cg-port-title { letter-spacing: 0.08em; }
+.cg-port-desc { font-size: 13px; color: var(--mid); margin-top: 4px; line-height: 1.5; }
+.cg-port-arrow { font-size: 22px; color: var(--muted); transform: rotate(45deg); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s; flex-shrink: 0; }
+.cg-port-item:hover .cg-port-arrow { transform: rotate(0deg); color: var(--accent); }
+
+/* ===================== SKILLS ===================== */
+#cg-skills { background: var(--surface); border-top: 1px solid var(--border); }
+
+.cg-skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.cg-skill-bars { display: flex; flex-direction: column; gap: 36px; }
+.cg-sk-top { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.cg-sk-name { font-size: 13px; letter-spacing: 0.06em; color: var(--ink); }
+.cg-sk-pct { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.1em; color: var(--accent); }
+.cg-sk-track { height: 1px; background: var(--border); position: relative; }
+.cg-sk-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(to right, var(--accent), #a0c030);
+  width: 0;
+  transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+}
+.cg-sk-fill::after {
+  content: '';
+  position: absolute; right: -1px; top: 50%;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.cg-skills-caption { color: var(--mid); font-size: 15px; line-height: 1.9; margin-bottom: 48px; }
+.cg-skills-caption strong { color: var(--ink); font-weight: 400; }
+
+.cg-tag-cloud { display: flex; flex-wrap: wrap; gap: 10px; }
+.cg-sk-tag {
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--mid); border-radius: 2px;
+  transition: all 0.25s; cursor: default;
+}
+.cg-sk-tag:hover { border-color: rgba(200,245,62,0.4); color: var(--accent); background: rgba(200,245,62,0.04); transform: translateY(-2px); }
+
+/* ===================== CONTACT ===================== */
+#cg-contact { background: var(--bg); }
+
+.cg-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.cg-contact-intro { font-size: 15px; color: var(--mid); line-height: 1.9; margin-bottom: 56px; max-width: 400px; }
+.cg-contact-intro strong { color: var(--ink); font-weight: 400; }
+
+.cg-c-links { display: flex; flex-direction: column; }
+
+.cg-c-link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none; color: var(--ink);
+  position: relative;
+  transition: padding-left 0.4s cubic-bezier(0.16,1,0.3,1);
+  overflow: hidden;
+}
+.cg-c-link::before {
+  content: ''; position: absolute;
+  left: 0; bottom: 0; height: 1px; width: 0;
+  background: var(--accent);
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.cg-c-link:hover { padding-left: 12px; }
+.cg-c-link:hover::before { width: 100%; }
+
+.cg-c-link-l { display: flex; align-items: center; gap: 20px; }
+.cg-c-icon {
+  width: 44px; height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+.cg-c-link:hover .cg-c-icon { background: rgba(200,245,62,0.08); border-color: rgba(200,245,62,0.3); }
+
+.cg-c-name { font-size: 14px; letter-spacing: 0.04em; }
+.cg-c-handle { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-top: 2px; }
+.cg-c-arr { font-size: 18px; color: var(--muted); transition: color 0.3s, transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+.cg-c-link:hover .cg-c-arr { color: var(--accent); transform: translate(4px, -4px); }
+
+/* Contact Form */
+.cg-contact-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 56px;
+  border-radius: 2px;
+}
+
+.cg-cf-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.06em; margin-bottom: 40px; }
+.cg-cf-group { margin-bottom: 28px; }
+.cg-cf-label { display: block; font-size: 9px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+.cg-cf-input, .cg-cf-textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 16px 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 300;
+  border-radius: 2px; outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  resize: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cg-cf-input:focus, .cg-cf-textarea:focus {
+  border-color: rgba(200,245,62,0.35);
+  box-shadow: 0 0 0 3px rgba(200,245,62,0.05);
+}
+.cg-cf-input.error { border-color: rgba(220,80,80,0.5); }
+.cg-cf-textarea { height: 130px; }
+
+.cg-cf-btn {
+  width: 100%;
+  background: var(--accent); color: var(--bg);
+  border: none; padding: 18px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  border-radius: 2px; cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cg-cf-btn:hover { background: #b8e030; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,245,62,0.25); }
+.cg-cf-btn:active { transform: translateY(0); box-shadow: none; }
+
+/* ===================== FOOTER ===================== */
+footer#cg-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 48px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cg-foot-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.18em; }
+.cg-foot-logo em { color: var(--accent); font-style: normal; }
+.cg-foot-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; }
+.cg-foot-tag  { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; }
+
+/* ===================== TOAST ===================== */
+#cg-toast {
+  position: fixed;
+  bottom: 36px; right: 24px;
+  background: var(--accent); color: var(--bg);
+  padding: 14px 28px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+  border-radius: 2px; z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  max-width: calc(100vw - 48px);
+  pointer-events: none;
+}
+#cg-toast.show { transform: translateY(0); opacity: 1; }
+
+/* ===================== NOISE OVERLAY ===================== */
+#cg-noise {
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 8000; opacity: 0.45;
+}
+
+/* =====================================================================
+   RESPONSIVE — 1024px
+   ===================================================================== */
+@media (max-width: 1024px) {
+  .cg-section { padding: 120px 48px; }
+  .cg-hero-inner { padding: 0 48px; }
+  #cg-nav { padding: 28px 48px; }
+  #cg-nav.compact { padding: 18px 48px; }
+  #cg-stats { padding: 100px 48px; }
+  footer#cg-footer { padding: 40px 48px; }
+}
+
+/* =====================================================================
+   RESPONSIVE — 900px (tablet)
+   ===================================================================== */
+@media (max-width: 900px) {
+  #cg-nav { padding: 20px 24px; }
+  #cg-nav.compact { padding: 14px 24px; }
+  .cg-nav-links { display: none !important; }
+  .cg-burger { display: flex !important; }
+
+  .cg-section { padding: 88px 24px; }
+  .cg-hero-inner { padding: 0 24px; }
+  #cg-stats { padding: 72px 24px; }
+  footer#cg-footer { padding: 36px 24px; flex-direction: column; gap: 14px; text-align: center; }
+
+  .cg-hero-bottom { flex-direction: column; gap: 28px; align-items: flex-start; }
+  .cg-hero-ctas { flex-wrap: wrap; gap: 14px; }
+  .cg-hero-scroll { left: 24px; bottom: 32px; }
+
+  .cg-about-grid,
+  .cg-skills-grid,
+  .cg-contact-grid { grid-template-columns: 1fr; gap: 56px; }
+  .cg-about-sticky { position: static; }
+
+  .cg-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .cg-stat-block { padding: 36px 20px; border-right: none; border-bottom: 1px solid var(--border); }
+  .cg-stat-block:nth-child(odd) { border-right: 1px solid var(--border); }
+  .cg-stat-block:nth-child(3),
+  .cg-stat-block:nth-child(4) { border-bottom: none; }
+
+  .cg-port-item { grid-template-columns: 40px 1fr auto; gap: 16px; padding: 24px 20px; }
+  .cg-port-note { text-align: left; }
+  .cg-port-intro { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  .cg-contact-form { padding: 36px 28px; }
+  .cg-tl-item { gap: 20px; }
+  .cg-s-label { margin-bottom: 48px; }
+}
+
+/* =====================================================================
+   RESPONSIVE — 600px (mobile)
+   ===================================================================== */
+@media (max-width: 600px) {
+  .cg-hero-h1 { font-size: clamp(52px, 15vw, 90px); margin-bottom: 28px; }
+  .cg-heading { font-size: clamp(40px, 11vw, 72px); }
+  .cg-section { padding: 72px 20px; }
+  #cg-stats { padding: 56px 20px; }
+
+  .cg-stats-grid { grid-template-columns: 1fr 1fr; }
+  .cg-stat-block { padding: 28px 16px; }
+  .cg-stat-num { font-size: clamp(38px, 10vw, 60px); }
+  .cg-stat-suf { font-size: 30px; }
+
+  .cg-port-title { font-size: 20px; }
+  .cg-port-item { gap: 10px; padding: 18px 16px; }
+  .cg-port-num { font-size: 11px; }
+
+  .cg-about-pull p { font-size: 16px; }
+  .cg-contact-form { padding: 28px 18px; }
+  .cg-hero-scroll { display: none; }
+  footer#cg-footer { padding: 28px 20px; }
+  nav#cg-nav { padding: 16px 20px; }
+  nav#cg-nav.compact { padding: 12px 20px; }
+  .cg-loader-bar-wrap { width: min(160px, 55vw); }
+  #cg-toast { bottom: 20px; right: 16px; }
+}
+
+/* =====================================================================
+   RESPONSIVE — 400px (very small)
+   ===================================================================== */
+@media (max-width: 420px) {
+  .cg-hero-h1 { font-size: clamp(44px, 14vw, 68px); }
+  .cg-btn { padding: 14px 22px; font-size: 11px; }
+  .cg-stats-grid { grid-template-columns: 1fr; }
+  .cg-stat-block { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+  .cg-stat-block:last-child { border-bottom: none !important; }
+  .cg-port-item { grid-template-columns: 32px 1fr auto; }
+}
+
+</style>
+</head>
+<body>
+<div id="cg-loader">
+  <div class="cg-loader-name" id="cg-loader-name"></div>
+  <div class="cg-loader-bar-wrap"><div class="cg-loader-bar-fill" id="cg-loader-bar"></div></div>
+  <div class="cg-loader-pct" id="cg-loader-pct">0%</div>
+</div>
+
+
+<div id="cg-cur-dot"></div>
+<div id="cg-cur-ring"></div>
+<div id="cg-cur-label"></div>
+
+
+<div id="cg-sprog"><div id="cg-sprogf"></div></div>
+
+
+<div id="cg-toast">Message sent — I'll be in touch soon ✓</div>
+
+
+<div id="cg-noise"></div>
+
+
+<div id="cg-mobile-menu">
+  <a href="#cg-about"    class="cg-mm-link">About</a>
+  <a href="#cg-stats"    class="cg-mm-link">Achievements</a>
+  <a href="#cg-portfolio" class="cg-mm-link">Work</a>
+  <a href="#cg-skills"   class="cg-mm-link">Skills</a>
+  <a href="#cg-contact"  class="cg-mm-link">Contact</a>
+</div>
+
+
+<nav id="cg-nav">
+  <a href="#" class="cg-nav-mark">CG<em>.</em></a>
+  <ul class="cg-nav-links">
+    <li><a href="#cg-about">About</a></li>
+    <li><a href="#cg-stats">Achievements</a></li>
+    <li><a href="#cg-portfolio">Work</a></li>
+    <li><a href="#cg-skills">Skills</a></li>
+    <li><a href="#cg-contact" class="cg-nav-cta">Contact</a></li>
+  </ul>
+  <button class="cg-burger" id="cg-burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+
+<section id="cg-hero">
+  <canvas id="cg-hero-canvas"></canvas>
+  <div class="cg-hero-inner">
+    <div class="cg-hero-pre" id="cg-hp">
+      <div class="cg-hero-pre-line"></div>
+      <span>Business Management · Marketing · Pretoria</span>
+    </div>
+    <div class="cg-hero-h1">
+      <div class="cg-hero-h1-row"><span id="cg-hr1">CHRISTIAN</span></div>
+      <div class="cg-hero-h1-row"><span id="cg-hr2">GROENE<span class="cg-accent-fill">WALD</span></span></div>
+    </div>
+    <div class="cg-hero-bottom" id="cg-hb">
+      <p class="cg-hero-desc">
+        <strong>Ambitious. Disciplined. Driven.</strong><br>
+        Business Management student, ex-competitive gymnast, and certified coach — channelling a decade of elite athletic performance into building a future at the intersection of strategy and marketing.
+      </p>
+      <div class="cg-hero-ctas">
+        <a href="#cg-portfolio" class="cg-btn cg-btn-primary" data-mag>View Work ↗</a>
+        <a href="#cg-contact"   class="cg-btn cg-btn-ghost"   data-mag>Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="cg-hero-scroll" id="cg-hs">
+    <div class="cg-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+
+<div class="cg-mq-wrap">
+  <div class="cg-mq-inner">
+    <div class="cg-mq-item">Business Management <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Marketing Strategy <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Gymnastics — 10 Years <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Certified Coach <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Honours Track <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Brand Building <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Christian Groenewald <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Business Management <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Marketing Strategy <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Gymnastics — 10 Years <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Certified Coach <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Honours Track <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Brand Building <span class="cg-mq-dot"></span></div>
+    <div class="cg-mq-item">Christian Groenewald <span class="cg-mq-dot"></span></div>
+  </div>
+</div>
+
+
+<section id="cg-about" class="cg-section">
+  <div class="cg-s-label cg-fade"><div class="cg-s-label-line"></div><span>01 — About</span></div>
+  <div class="cg-about-grid">
+    <div class="cg-about-sticky">
+      <h2 class="cg-heading cg-fade" style="margin-bottom:40px">WHO<br>I AM.</h2>
+      <div class="cg-about-text cg-fade cg-d1">
+        <p>I'm Christian Groenewald — a <strong>Business Management student</strong> with a genuine passion for marketing. I'm the kind of person who gets obsessed with how brands are built, why people buy, and what makes a message actually land.</p>
+        <p>What sets me apart is my background: <strong>ten years competing in gymnastics</strong>, then coaching for nearly five more. That shaped me in ways a classroom never could — discipline, precision, the ability to perform under real pressure, and the instinct to lead others to their best.</p>
+        <p>Currently in my <strong>third year of studies</strong>, planning to push through to Honours. Every day I'm connecting the dots between athletic mindset and business strategy.</p>
+      </div>
+      <div class="cg-about-pull cg-fade cg-d2">
+        <p>"The same focus that wins competitions builds careers. I'm just applying it to a bigger stage."</p>
+      </div>
+    </div>
+    <div class="cg-timeline">
+      <div class="cg-tl-item cg-fade">
+        <div class="cg-tl-dot"></div>
+        <div class="cg-tl-year">2013–2023</div>
+        <div class="cg-tl-content"><div class="cg-tl-title">Competitive Gymnastics</div><div class="cg-tl-desc">A full decade of dedication, discipline and competition. Built the mental and physical foundation that still drives everything I do.</div></div>
+      </div>
+      <div class="cg-tl-item cg-fade cg-d1">
+        <div class="cg-tl-dot"></div>
+        <div class="cg-tl-year">2019–2024</div>
+        <div class="cg-tl-content"><div class="cg-tl-title">Head Gymnastics Coach</div><div class="cg-tl-desc">Transitioned from athlete to mentor. Coached gymnasts across multiple levels, earned formal certifications, and developed real leadership skills.</div></div>
+      </div>
+      <div class="cg-tl-item cg-fade cg-d2">
+        <div class="cg-tl-dot"></div>
+        <div class="cg-tl-year">2023</div>
+        <div class="cg-tl-content"><div class="cg-tl-title">Matric — Class of 2023</div><div class="cg-tl-desc">Completed my schooling and stepped into higher education, ready to build on everything the previous decade had taught me.</div></div>
+      </div>
+      <div class="cg-tl-item cg-fade cg-d3">
+        <div class="cg-tl-dot"></div>
+        <div class="cg-tl-year">2024–Now</div>
+        <div class="cg-tl-content"><div class="cg-tl-title">Business Management Degree</div><div class="cg-tl-desc">Third year in, with Honours firmly in my plans. Blending academic theory with a deep personal interest in marketing and brand strategy.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="cg-stats">
+  <div class="cg-stats-grid">
+    <div class="cg-stat-block cg-fade">
+      <div class="cg-stat-num"><span class="cg-ctr" data-t="10">0</span><span class="cg-stat-suf">+</span></div>
+      <div class="cg-stat-label">Years as an Athlete</div>
+      <div class="cg-stat-sub">A decade of elite gymnastics — competing, training, and performing at the highest level.</div>
+    </div>
+    <div class="cg-stat-block cg-fade cg-d1">
+      <div class="cg-stat-num"><span class="cg-ctr" data-t="4">0</span><span class="cg-stat-suf">+</span></div>
+      <div class="cg-stat-label">Years Coaching</div>
+      <div class="cg-stat-sub">Certified coach with hands-on experience developing athletes and leading teams.</div>
+    </div>
+    <div class="cg-stat-block cg-fade cg-d2">
+      <div class="cg-stat-num"><span class="cg-ctr" data-t="3">0</span><span class="cg-stat-suf">rd</span></div>
+      <div class="cg-stat-label">Year of Degree</div>
+      <div class="cg-stat-sub">Business Management, with an Honours degree on the horizon.</div>
+    </div>
+    <div class="cg-stat-block cg-fade cg-d3">
+      <div class="cg-stat-num"><span class="cg-ctr" data-t="2">0</span><span class="cg-stat-suf">+</span></div>
+      <div class="cg-stat-label">Coaching Certifications</div>
+      <div class="cg-stat-sub">Formal qualifications earned alongside competing and now studying.</div>
+    </div>
+  </div>
+</section>
+
+
+<section id="cg-portfolio" class="cg-section">
+  <div class="cg-port-intro">
+    <div>
+      <div class="cg-s-label cg-fade" style="margin-bottom:24px"><div class="cg-s-label-line"></div><span>03 — Work</span></div>
+      <h2 class="cg-heading cg-fade">SELECTED<br>WORK.</h2>
+    </div>
+    <p class="cg-port-note cg-fade">Projects and work that reflect how I think, build, and execute.</p>
+  </div>
+  <div class="cg-port-list">
+    <div class="cg-port-item cg-fade" data-tilt>
+      <div class="cg-port-num">01</div>
+      <div class="cg-port-info"><div class="cg-port-tag">Marketing Strategy</div><div class="cg-port-title">YOUR FEATURED PROJECT</div><div class="cg-port-desc">Add your best campaign, business plan, or marketing strategy here.</div></div>
+      <div class="cg-port-arrow">↗</div>
+    </div>
+    <div class="cg-port-item cg-fade cg-d1" data-tilt>
+      <div class="cg-port-num">02</div>
+      <div class="cg-port-info"><div class="cg-port-tag">Business</div><div class="cg-port-title">UNIVERSITY PROJECT</div><div class="cg-port-desc">A standout academic case study, business analysis, or research project from your degree.</div></div>
+      <div class="cg-port-arrow">↗</div>
+    </div>
+    <div class="cg-port-item cg-fade cg-d2" data-tilt>
+      <div class="cg-port-num">03</div>
+      <div class="cg-port-info"><div class="cg-port-tag">Coaching</div><div class="cg-port-title">COACHING PROGRAM DESIGN</div><div class="cg-port-desc">The structured training and development system you built and ran as a gymnastics coach.</div></div>
+      <div class="cg-port-arrow">↗</div>
+    </div>
+    <div class="cg-port-item cg-fade cg-d3" data-tilt>
+      <div class="cg-port-num">04</div>
+      <div class="cg-port-info"><div class="cg-port-tag">Marketing</div><div class="cg-port-title">BRAND / SOCIAL CAMPAIGN</div><div class="cg-port-desc">Any social media strategy, brand concept, or content campaign you've been part of or developed.</div></div>
+      <div class="cg-port-arrow">↗</div>
+    </div>
+    <div class="cg-port-item cg-fade cg-d4" data-tilt>
+      <div class="cg-port-num">05</div>
+      <div class="cg-port-info"><div class="cg-port-tag">Personal</div><div class="cg-port-title">YOUR FIFTH PROJECT</div><div class="cg-port-desc">A personal project, side venture, or something you're building outside of university.</div></div>
+      <div class="cg-port-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+
+<section id="cg-skills" class="cg-section">
+  <div class="cg-s-label cg-fade"><div class="cg-s-label-line"></div><span>04 — Skills</span></div>
+  <div class="cg-skills-grid">
+    <div>
+      <h2 class="cg-heading cg-fade" style="margin-bottom:48px">WHAT I<br>BRING.</h2>
+      <div class="cg-skill-bars" id="cg-sk-bars">
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Coaching &amp; Leadership</span><span class="cg-sk-pct">94%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="94"></div></div></div>
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Marketing &amp; Brand Strategy</span><span class="cg-sk-pct">87%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="87"></div></div></div>
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Business Management</span><span class="cg-sk-pct">84%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="84"></div></div></div>
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Social Media &amp; Content</span><span class="cg-sk-pct">81%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="81"></div></div></div>
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Communication &amp; Presentation</span><span class="cg-sk-pct">88%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="88"></div></div></div>
+        <div class="cg-sk-item"><div class="cg-sk-top"><span class="cg-sk-name">Discipline &amp; Work Ethic</span><span class="cg-sk-pct">99%</span></div><div class="cg-sk-track"><div class="cg-sk-fill" data-w="99"></div></div></div>
+      </div>
+    </div>
+    <div>
+      <p class="cg-skills-caption cg-fade">A rare blend of <strong>athletic discipline</strong> and <strong>commercial thinking</strong>. Forged on gym floors, refined in lecture halls — and always hungry to grow.</p>
+      <div class="cg-tag-cloud cg-fade cg-d1">
+        <div class="cg-sk-tag">Marketing Strategy</div>
+        <div class="cg-sk-tag">Brand Development</div>
+        <div class="cg-sk-tag">Social Media</div>
+        <div class="cg-sk-tag">Business Management</div>
+        <div class="cg-sk-tag">Team Leadership</div>
+        <div class="cg-sk-tag">Coaching</div>
+        <div class="cg-sk-tag">Content Creation</div>
+        <div class="cg-sk-tag">Strategic Planning</div>
+        <div class="cg-sk-tag">Project Management</div>
+        <div class="cg-sk-tag">Public Speaking</div>
+        <div class="cg-sk-tag">Market Research</div>
+        <div class="cg-sk-tag">Consumer Behaviour</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="cg-contact" class="cg-section">
+  <div class="cg-s-label cg-fade"><div class="cg-s-label-line"></div><span>05 — Contact</span></div>
+  <div class="cg-contact-grid">
+    <div>
+      <h2 class="cg-heading cg-fade" style="margin-bottom:32px">LET'S<br>TALK.</h2>
+      <p class="cg-contact-intro cg-fade cg-d1">Whether it's a collaboration, an opportunity, or just a conversation about business and marketing — <strong>I want to hear from you.</strong></p>
+      <div class="cg-c-links cg-fade cg-d2">
+        <a href="https://instagram.com/christian.gro3n" target="_blank" rel="noopener noreferrer" class="cg-c-link" data-cur="View">
+          <div class="cg-c-link-l"><div class="cg-c-icon">📸</div><div><div class="cg-c-name">Instagram</div><div class="cg-c-handle">@christian.gro3n</div></div></div>
+          <div class="cg-c-arr">↗</div>
+        </a>
+        <a href="mailto:ceo@christiangroenewald.com" class="cg-c-link" data-cur="Email">
+          <div class="cg-c-link-l"><div class="cg-c-icon">✉️</div><div><div class="cg-c-name">Email</div><div class="cg-c-handle">ceo@christiangroenewald.com</div></div></div>
+          <div class="cg-c-arr">↗</div>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="cg-c-link" data-cur="Connect">
+          <div class="cg-c-link-l"><div class="cg-c-icon">💼</div><div><div class="cg-c-name">LinkedIn</div><div class="cg-c-handle">Add your LinkedIn URL</div></div></div>
+          <div class="cg-c-arr">↗</div>
+        </a>
+      </div>
+    </div>
+    <div class="cg-contact-form cg-fade cg-d2">
+      <div class="cg-cf-title">SEND A MESSAGE</div>
+      <div class="cg-cf-group">
+        <label class="cg-cf-label" for="cg-cf-name">Your Name</label>
+        <input type="text" class="cg-cf-input" placeholder="Your name" id="cg-cf-name" autocomplete="name">
+      </div>
+      <div class="cg-cf-group">
+        <label class="cg-cf-label" for="cg-cf-email">Email Address</label>
+        <input type="email" class="cg-cf-input" placeholder="your@email.com" id="cg-cf-email" autocomplete="email">
+      </div>
+      <div class="cg-cf-group">
+        <label class="cg-cf-label" for="cg-cf-msg">Message</label>
+        <textarea class="cg-cf-textarea cg-cf-input" placeholder="What's on your mind?" id="cg-cf-msg"></textarea>
+      </div>
+      <button class="cg-cf-btn" id="cg-cf-btn" data-cur="Send">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+
+<footer id="cg-footer">
+  <div class="cg-foot-logo">CHRISTIAN <em>G.</em></div>
+  <div class="cg-foot-copy">© 2025 Christian Groenewald. All rights reserved.</div>
+  <div class="cg-foot-tag">Business · Marketing · Excellence</div>
+</footer>
+<script>
+/* ============================================================
+   CHRISTIAN GROENEWALD — script.js
+   Add this in WordPress via: Appearance > Theme File Editor
+   OR use a plugin like "Insert Headers and Footers" (footer)
+   OR WPCode plugin — paste in footer section
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  /* ===================== HELPERS ===================== */
+  function $(id) { return document.getElementById(id); }
+  function $$(sel) { return document.querySelectorAll(sel); }
+  const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* ===================== LOADER ===================== */
+  var loaderEl = $('cg-loader');
+  var lName    = $('cg-loader-name');
+  var lBar     = $('cg-loader-bar');
+  var lPct     = $('cg-loader-pct');
+
+  if (lName) {
+    'CHRISTIAN GROENEWALD'.split('').forEach(function (ch, i) {
+      var s = document.createElement('span');
+      s.textContent = ch === ' ' ? '\u00a0' : ch;
+      s.style.cssText = 'transition:transform 0.6s ' + (i * 0.04) + 's cubic-bezier(0.16,1,0.3,1),opacity 0.6s ' + (i * 0.04) + 's';
+      lName.appendChild(s);
+    });
+  }
+
+  var loaderP = 0;
+  var loaderTimer = setInterval(function () {
+    loaderP = Math.min(loaderP + Math.random() * 14, 100);
+    if (lBar) lBar.style.width = loaderP + '%';
+    if (lPct) lPct.textContent = Math.floor(loaderP) + '%';
+    if (loaderP >= 100) clearInterval(loaderTimer);
+  }, 70);
+
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (lName) {
+        lName.querySelectorAll('span').forEach(function (s) {
+          s.style.transform = 'translateY(0)';
+          s.style.opacity = '1';
+        });
+      }
+      setTimeout(function () {
+        if (loaderEl) {
+          loaderEl.style.transition = 'clip-path 0.9s cubic-bezier(0.76,0,0.24,1)';
+          loaderEl.style.clipPath = 'inset(0 0 100% 0)';
+          setTimeout(function () {
+            if (loaderEl) loaderEl.style.display = 'none';
+            heroIn();
+          }, 950);
+        } else {
+          heroIn();
+        }
+      }, 900);
+    }, 300);
+  });
+
+  /* ===================== HERO ANIMATION ===================== */
+  function heroIn() {
+    var hp  = $('cg-hp'),
+        hr1 = $('cg-hr1'),
+        hr2 = $('cg-hr2'),
+        hb  = $('cg-hb'),
+        hs  = $('cg-hs');
+
+    if (hp)  setTimeout(function () { hp.style.cssText  = 'transition:opacity .8s,transform .8s;opacity:1;transform:translateY(0)'; }, 100);
+    if (hr1) setTimeout(function () { hr1.style.cssText = 'transition:transform 1s cubic-bezier(0.16,1,0.3,1);transform:translateY(0)'; }, 300);
+    if (hr2) setTimeout(function () { hr2.style.cssText = 'transition:transform 1.1s cubic-bezier(0.16,1,0.3,1);transform:translateY(0)'; }, 480);
+    if (hb)  setTimeout(function () { hb.style.cssText  = 'transition:opacity .9s,transform .9s;opacity:1;transform:translateY(0)'; }, 800);
+    if (hs)  setTimeout(function () { hs.style.cssText  = 'transition:opacity .8s;opacity:1'; }, 1200);
+  }
+
+  /* ===================== CANVAS PARTICLES ===================== */
+  var canvas = $('cg-hero-canvas');
+  if (canvas) {
+    var ctx = canvas.getContext('2d');
+    var W, H, particles = [], pmx = -999, pmy = -999;
+
+    function resizeCanvas() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+
+    var resizeDebounce;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(resizeCanvas, 150);
+    });
+
+    function Particle() { this.reset(); }
+    Particle.prototype.reset = function () {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.vx = (Math.random() - .5) * .3;
+      this.vy = (Math.random() - .5) * .3;
+      this.r  = Math.random() * 1.5 + .4;
+      this.a  = Math.random() * .35 + .08;
+    };
+    Particle.prototype.update = function () {
+      var dx = this.x - pmx, dy = this.y - pmy;
+      var d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < 130 && d > 0) {
+        var f = (130 - d) / 130 * .8;
+        this.vx += (dx / d) * f * .05;
+        this.vy += (dy / d) * f * .05;
+      }
+      this.vx *= .98; this.vy *= .98;
+      this.x  += this.vx; this.y  += this.vy;
+      if (this.x < 0) this.x = W;
+      if (this.x > W) this.x = 0;
+      if (this.y < 0) this.y = H;
+      if (this.y > H) this.y = 0;
+    };
+    Particle.prototype.draw = function () {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,245,62,' + this.a + ')';
+      ctx.fill();
+    };
+
+    var count = window.innerWidth < 600 ? 55 : window.innerWidth < 900 ? 80 : 130;
+    for (var i = 0; i < count; i++) particles.push(new Particle());
+
+    function drawLines() {
+      for (var a = 0; a < particles.length; a++) {
+        for (var b = a + 1; b < particles.length; b++) {
+          var dx = particles[a].x - particles[b].x;
+          var dy = particles[a].y - particles[b].y;
+          var d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < 110) {
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.strokeStyle = 'rgba(200,245,62,' + (1 - d / 110) * .07 + ')';
+            ctx.lineWidth = .5;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animLoop() {
+      ctx.clearRect(0, 0, W, H);
+      drawLines();
+      particles.forEach(function (p) { p.update(); p.draw(); });
+      requestAnimationFrame(animLoop);
+    }
+    animLoop();
+
+    document.addEventListener('mousemove', function (e) {
+      var rect = canvas.getBoundingClientRect();
+      pmx = e.clientX - rect.left;
+      pmy = e.clientY - rect.top;
+    });
+    document.addEventListener('touchmove', function (e) {
+      var rect = canvas.getBoundingClientRect();
+      pmx = e.touches[0].clientX - rect.left;
+      pmy = e.touches[0].clientY - rect.top;
+    }, { passive: true });
+  }
+
+  /* ===================== CUSTOM CURSOR (desktop only) ===================== */
+  if (!isTouch) {
+    document.body.classList.add('cg-cursor-active');
+    var dot    = $('cg-cur-dot');
+    var ring   = $('cg-cur-ring');
+    var clabel = $('cg-cur-label');
+
+    if (dot && ring && clabel) {
+      var curX = 0, curY = 0, ringX = 0, ringY = 0;
+      document.addEventListener('mousemove', function (e) { curX = e.clientX; curY = e.clientY; });
+
+      (function cursorLoop() {
+        ringX += (curX - ringX) * .1;
+        ringY += (curY - ringY) * .1;
+        dot.style.left   = curX + 'px'; dot.style.top   = curY + 'px';
+        ring.style.left  = ringX + 'px'; ring.style.top = ringY + 'px';
+        clabel.style.left = curX + 'px'; clabel.style.top = curY + 'px';
+        requestAnimationFrame(cursorLoop);
+      })();
+
+      $$('[data-tilt], .cg-sk-tag, .cg-stat-block').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { document.body.classList.add('cur-big'); });
+        el.addEventListener('mouseleave', function () { document.body.classList.remove('cur-big'); });
+      });
+      $$('a, button').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { document.body.classList.add('cur-link'); });
+        el.addEventListener('mouseleave', function () { document.body.classList.remove('cur-link'); });
+      });
+      $$('[data-cur]').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { clabel.textContent = el.dataset.cur; clabel.style.opacity = '1'; });
+        el.addEventListener('mouseleave', function () { clabel.style.opacity = '0'; });
+      });
+    }
+  }
+
+  /* ===================== SCROLL PROGRESS + NAV ===================== */
+  var sprogf = $('cg-sprogf');
+  var nav    = $('cg-nav');
+
+  window.addEventListener('scroll', function () {
+    var scrolled = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1) * 100;
+    if (sprogf) sprogf.style.width = Math.min(scrolled, 100) + '%';
+    if (nav)    nav.classList.toggle('compact', window.scrollY > 80);
+  }, { passive: true });
+
+  /* ===================== HAMBURGER MENU ===================== */
+  var burger     = $('cg-burger');
+  var mobileMenu = $('cg-mobile-menu');
+
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', function () {
+      var isOpen = burger.classList.toggle('open');
+      if (isOpen) {
+        mobileMenu.style.display = 'flex';
+        setTimeout(function () { mobileMenu.classList.add('open'); }, 10);
+        document.body.style.overflow = 'hidden';
+      } else {
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+        setTimeout(function () { mobileMenu.style.display = 'none'; }, 350);
+      }
+    });
+
+    $$('.cg-mm-link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        burger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+        setTimeout(function () { mobileMenu.style.display = 'none'; }, 350);
+      });
+    });
+  }
+
+  /* ===================== SCROLL REVEAL ===================== */
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    $$('.cg-fade').forEach(function (el) { ro.observe(el); });
+  } else {
+    // Fallback for very old browsers — just show everything
+    $$('.cg-fade').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ===================== SKILL BARS ===================== */
+  var skBars = $('cg-sk-bars');
+  if (skBars && 'IntersectionObserver' in window) {
+    var sko = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.cg-sk-fill').forEach(function (b) {
+            setTimeout(function () { b.style.width = b.dataset.w + '%'; }, 200);
+          });
+          sko.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    sko.observe(skBars);
+  }
+
+  /* ===================== COUNTER ANIMATION ===================== */
+  function animCounter(el, target) {
+    var start = null, dur = 2000;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / dur, 1);
+      var eased    = 1 - Math.pow(1 - progress, 4);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  var statsEl = $('cg-stats');
+  if (statsEl && 'IntersectionObserver' in window) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.cg-ctr').forEach(function (el) {
+            animCounter(el, +el.dataset.t);
+          });
+          co.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    co.observe(statsEl);
+  }
+
+  /* ===================== MAGNETIC BUTTONS (desktop only) ===================== */
+  if (!isTouch) {
+    $$('[data-mag]').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        btn.style.transform = 'translate(' +
+          ((e.clientX - r.left - r.width  / 2) * .3) + 'px,' +
+          ((e.clientY - r.top  - r.height / 2) * .3) + 'px)';
+      });
+      btn.addEventListener('mouseleave', function () {
+        btn.style.transition = 'transform .5s cubic-bezier(0.16,1,0.3,1)';
+        btn.style.transform  = '';
+        setTimeout(function () { btn.style.transition = ''; }, 500);
+      });
+    });
+
+    /* ===================== TILT CARDS (desktop only) ===================== */
+    $$('[data-tilt]').forEach(function (el) {
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width  - .5;
+        var y = (e.clientY - r.top)  / r.height - .5;
+        el.style.transform  = 'perspective(800px) rotateX(' + (-y * 4) + 'deg) rotateY(' + (x * 6) + 'deg) translateZ(4px)';
+        el.style.transition = 'transform .1s';
+      });
+      el.addEventListener('mouseleave', function () {
+        el.style.transform  = '';
+        el.style.transition = 'transform .5s cubic-bezier(0.16,1,0.3,1), border-color .3s';
+      });
+    });
+  }
+
+  /* ===================== CONTACT FORM ===================== */
+  var cfBtn = $('cg-cf-btn');
+  if (cfBtn) {
+    cfBtn.addEventListener('click', function () {
+      var cfN = $('cg-cf-name');
+      var cfE = $('cg-cf-email');
+      var cfM = $('cg-cf-msg');
+      var valid = true;
+
+      [cfN, cfE, cfM].forEach(function (f) {
+        if (!f || !f.value.trim()) {
+          if (f) f.classList.add('error');
+          valid = false;
+        } else {
+          f.classList.remove('error');
+        }
+      });
+
+      // Basic email check
+      if (cfE && cfE.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cfE.value)) {
+        cfE.classList.add('error');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      var toast = $('cg-toast');
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(function () { toast.classList.remove('show'); }, 4000);
+      }
+
+      [cfN, cfE, cfM].forEach(function (f) {
+        if (f) { f.value = ''; f.classList.remove('error'); }
+      });
+    });
+
+    // Remove error state on input
+    $$('#cg-cf-name, #cg-cf-email, #cg-cf-msg').forEach(function (f) {
+      f.addEventListener('input', function () { f.classList.remove('error'); });
+    });
+  }
+
+})();
+
+</script>
+</body>
+</html>
