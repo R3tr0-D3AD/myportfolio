@@ -43,12 +43,14 @@ body {
 }
 .ld-name {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 7vw, 90px);
-  letter-spacing: 0.12em;
+  font-size: clamp(16px, 4.8vw, 72px);
+  letter-spacing: 0.10em;
   color: #f2f0eb;
+  white-space: nowrap;
+  overflow: visible;
 }
 .ld-name span { display: inline-block; transform: translateY(100%); opacity: 0; }
-.ld-bar-wrap  { width: min(220px,65vw); height: 1px; background: #3a3a3a; position: relative; overflow: hidden; }
+.ld-bar-wrap  { width: min(320px,75vw); height: 1px; background: #3a3a3a; position: relative; overflow: hidden; }
 .ld-bar-fill  { position: absolute; inset: 0; background: #c8f53e; width: 0; }
 .ld-pct       { font-size: 11px; letter-spacing: 0.3em; color: #888; font-weight: 400; }
 
@@ -141,22 +143,27 @@ nav#nav.compact {
 #mmenu a:hover { color: #c8f53e; letter-spacing: 0.12em; }
 
 /* ── HERO ────────────────────────────────── */
-#hero { height: 100vh; min-height: 580px; position: relative; display: flex; align-items: center; overflow: hidden; }
+#hero { height: 100vh; min-height: 620px; position: relative; display: flex; align-items: center; overflow: hidden; }
 #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
-.hero-inner { position: relative; z-index: 1; padding: 0 64px; width: 100%; }
+/* padding-bottom leaves room for the scroll indicator so desc never overlaps it */
+.hero-inner { position: relative; z-index: 1; padding: 0 64px 140px; width: 100%; }
 
 .hero-pre { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; opacity: 0; transform: translateY(20px); }
 .hero-pre-line { width: 36px; height: 1px; background: #c8f53e; flex-shrink: 0; }
 .hero-pre span { font-size: 10px; font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: #c8f53e; }
 
-.hero-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px,12vw,170px); line-height: 0.88; letter-spacing: 0.02em; margin-bottom: 48px; }
-.hero-h1-row { overflow: hidden; }
-.hero-h1-row span { display: block; transform: translateY(110%); }
-.hero-h1-row:nth-child(2) span { color: transparent; -webkit-text-stroke: 1px rgba(242,240,235,0.2); }
-.accent { color: #c8f53e; -webkit-text-stroke: 0; }
+.hero-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 10.5vw, 155px); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 48px; }
+/* clip isolates the slide-in animation; padding-bottom prevents descender clipping */
+.hero-h1-row { overflow: hidden; padding-bottom: 0.14em; }
+/* > (child combinator) ensures only the direct slide-in span gets display:block/transform
+   NOT the nested .accent span inside GROENEWALD, which must stay inline */
+.hero-h1-row > span { display: block; transform: translateY(110%); white-space: nowrap; }
+.hero-h1-row:nth-child(2) > span { color: transparent; -webkit-text-stroke: 1px rgba(242,240,235,0.2); }
+/* accent must be inline so WALD stays on the same line as GROENE */
+.accent { display: inline; color: #c8f53e !important; -webkit-text-stroke: 0 !important; }
 
-.hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; opacity: 0; transform: translateY(30px); }
-.hero-desc { max-width: 420px; font-size: 15px; color: #888; line-height: 1.85; }
+.hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; opacity: 0; transform: translateY(30px); gap: 32px; }
+.hero-desc { max-width: 400px; font-size: 14px; color: #888; line-height: 1.8; }
 .hero-desc strong { color: #f2f0eb; font-weight: 400; }
 .hero-ctas { display: flex; gap: 20px; align-items: center; flex-shrink: 0; }
 
@@ -166,8 +173,9 @@ nav#nav.compact {
 .btn-outline { color: #888; border: 1px solid rgba(242,240,235,0.07); background: transparent; }
 .btn-outline:hover { color: #f2f0eb; border-color: rgba(242,240,235,0.2); }
 
-.hero-scroll { position: absolute; bottom: 48px; left: 64px; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 1; opacity: 0; }
-.scroll-line { width: 1px; height: 64px; background: linear-gradient(to bottom, #c8f53e 0%, transparent 100%); animation: scrollDrop 2s ease-in-out infinite; }
+/* scroll indicator sits at bottom-right so it never overlaps the description copy */
+.hero-scroll { position: absolute; bottom: 48px; right: 64px; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 1; opacity: 0; }
+.scroll-line { width: 1px; height: 56px; background: linear-gradient(to bottom, #c8f53e 0%, transparent 100%); animation: scrollDrop 2s ease-in-out infinite; }
 @keyframes scrollDrop { 0%,100%{ transform: scaleY(1); opacity: 1; } 50%{ transform: scaleY(0.4); opacity: 0.4; } }
 .hero-scroll span { writing-mode: vertical-lr; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #3a3a3a; }
 
@@ -202,13 +210,14 @@ nav#nav.compact {
 .about-quote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; line-height: 1.65; color: #f2f0eb; }
 
 .timeline { display: flex; flex-direction: column; }
-.tl-item { display: grid; grid-template-columns: 80px 1fr; gap: 32px; padding: 40px 0; border-bottom: 1px solid rgba(242,240,235,0.07); position: relative; transition: background 0.3s; }
+.tl-item { display: grid; grid-template-columns: 90px 24px 1fr; gap: 0 16px; padding: 40px 0; border-bottom: 1px solid rgba(242,240,235,0.07); position: relative; transition: background 0.3s; }
 .tl-item:first-child { border-top: 1px solid rgba(242,240,235,0.07); }
-.tl-item::before { content: ''; position: absolute; left: 66px; top: 0; bottom: 0; width: 1px; background: rgba(242,240,235,0.07); }
+/* vertical line runs through the dot column (col 2) */
+.tl-item::before { content: ''; position: absolute; left: calc(90px + 16px + 11px); top: 0; bottom: 0; width: 1px; background: rgba(242,240,235,0.07); z-index: 0; }
 .tl-item:hover { background: rgba(200,245,62,0.015); }
-.tl-dot { position: absolute; left: 62px; top: 44px; width: 9px; height: 9px; background: #060606; border: 1px solid #c8f53e; border-radius: 50%; z-index: 1; transition: background 0.3s; }
+.tl-dot { width: 9px; height: 9px; background: #060606; border: 1px solid #c8f53e; border-radius: 50%; z-index: 1; transition: background 0.3s; margin-top: 6px; align-self: start; justify-self: center; }
 .tl-item:hover .tl-dot { background: #c8f53e; }
-.tl-year { font-size: 11px; letter-spacing: 0.2em; color: #c8f53e; font-weight: 500; padding-top: 4px; }
+.tl-year { font-size: 11px; letter-spacing: 0.2em; color: #c8f53e; font-weight: 500; padding-top: 4px; text-align: right; }
 .tl-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; margin-bottom: 8px; line-height: 1; }
 .tl-desc { font-size: 13px; color: #888; line-height: 1.65; }
 
@@ -255,9 +264,52 @@ nav#nav.compact {
 .sk-fill::after { content: ''; position: absolute; right: -1px; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: #c8f53e; transform: translateY(-50%); box-shadow: 0 0 10px #c8f53e; }
 .sk-caption { color: #888; font-size: 15px; line-height: 1.9; margin-bottom: 48px; }
 .sk-caption strong { color: #f2f0eb; font-weight: 400; }
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 10px; }
-.tag { padding: 10px 18px; border: 1px solid rgba(242,240,235,0.07); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #888; border-radius: 2px; transition: all 0.25s; cursor: default; }
-.tag:hover { border-color: rgba(200,245,62,0.4); color: #c8f53e; background: rgba(200,245,62,0.04); transform: translateY(-2px); }
+
+/* ── redesigned skill groups ── */
+.sk-pullquote {
+  margin-bottom: 48px;
+  padding: 28px 32px;
+  border-left: 2px solid #c8f53e;
+  background: rgba(200,245,62,0.025);
+}
+.sk-pullquote p {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #f2f0eb;
+}
+.sk-groups { display: flex; flex-direction: column; gap: 0; }
+.sk-group {
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(242,240,235,0.07);
+}
+.sk-group:first-child { border-top: 1px solid rgba(242,240,235,0.07); }
+.sk-group-hd {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.sk-group-line { width: 20px; height: 1px; background: #c8f53e; flex-shrink: 0; }
+.sk-group-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.32em;
+  text-transform: uppercase; color: #c8f53e;
+}
+.sk-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sk-chip {
+  padding: 6px 14px;
+  border: 1px solid rgba(242,240,235,0.1);
+  font-size: 12px; font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #aaa;
+  border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  cursor: default;
+}
+.sk-chip:hover {
+  border-color: rgba(200,245,62,0.4);
+  color: #fff;
+  background: rgba(200,245,62,0.05);
+}
 
 /* ── CONTACT ─────────────────────────────── */
 #contact { background-color: #060606; }
@@ -316,69 +368,117 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media (max-width: 1024px) {
-  .sec        { padding: 120px 48px; }
-  .hero-inner { padding: 0 48px; }
-  nav#nav     { padding: 28px 48px; }
-  nav#nav.compact { padding: 18px 48px; }
-  #stats      { padding: 100px 48px; }
-  footer      { padding: 40px 48px; }
+  .sec        { padding: 120px 40px; }
+  .hero-inner { padding: 0 40px 130px; }
+  nav#nav     { padding: 24px 40px; }
+  nav#nav.compact { padding: 16px 40px; }
+  #stats      { padding: 100px 40px; }
+  footer      { padding: 40px 40px; }
 }
 
 @media (max-width: 900px) {
-  nav#nav         { padding: 20px 24px; }
-  nav#nav.compact { padding: 14px 24px; }
+  nav#nav         { padding: 18px 24px; }
+  nav#nav.compact { padding: 13px 24px; }
   .nav-links      { display: none !important; }
   .burger         { display: flex; }
 
-  .sec        { padding: 88px 24px; }
-  .hero-inner { padding: 0 24px; }
-  #stats      { padding: 72px 24px; }
-  footer      { padding: 36px 24px; flex-direction: column; gap: 14px; text-align: center; }
+  .sec            { padding: 80px 24px; }
+  .hero-inner     { padding: 0 24px 110px; }
+  #stats          { padding: 64px 24px; }
+  footer          { padding: 32px 24px; flex-direction: column; gap: 12px; text-align: center; }
 
-  .hero-bottom { flex-direction: column; gap: 28px; align-items: flex-start; }
-  .hero-ctas   { flex-wrap: wrap; gap: 14px; }
-  .hero-scroll { left: 24px; bottom: 32px; }
+  .hero-bottom    { flex-direction: column; gap: 24px; align-items: flex-start; }
+  .hero-ctas      { flex-wrap: wrap; gap: 12px; }
+  .hero-scroll    { right: 24px; bottom: 32px; }
 
-  .about-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; gap: 56px; }
-  .about-sticky { position: static; }
+  .about-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-sticky   { position: static; }
+  .about-quote    { margin-top: 32px; }
 
-  .stats-grid { grid-template-columns: repeat(2,1fr); }
-  .stat-block { padding: 36px 20px; border-right: none; border-bottom: 1px solid rgba(242,240,235,0.07); }
+  .stats-grid     { grid-template-columns: repeat(2,1fr); }
+  .stat-block     { padding: 32px 20px; border-right: none; border-bottom: 1px solid rgba(242,240,235,0.07); }
   .stat-block:nth-child(odd)  { border-right: 1px solid rgba(242,240,235,0.07); }
   .stat-block:nth-child(3),
   .stat-block:nth-child(4)    { border-bottom: none; }
 
-  .port-item  { grid-template-columns: 40px 1fr auto; gap: 16px; padding: 24px 20px; }
-  .port-note  { text-align: left; }
-  .port-intro { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .contact-form { padding: 36px 28px; }
-  .sec-label  { margin-bottom: 48px; }
+  .port-item      { grid-template-columns: 36px 1fr auto; gap: 14px; padding: 22px 18px; }
+  .port-note      { text-align: left; }
+  .port-intro     { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .contact-form   { padding: 32px 24px; }
+  .sec-label      { margin-bottom: 40px; }
+  .tl-item        { grid-template-columns: 72px 20px 1fr; gap: 0 12px; }
+  .tl-item::before{ left: calc(72px + 12px + 9px); }
 }
 
+/* ── PHONE ──────────────────────────────── */
 @media (max-width: 600px) {
-  .hero-h1    { font-size: clamp(50px,15vw,88px); margin-bottom: 28px; }
-  .sec-title  { font-size: clamp(38px,11vw,70px); }
-  .sec        { padding: 72px 20px; }
-  #stats      { padding: 56px 20px; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .stat-block { padding: 28px 16px; }
-  .stat-num   { font-size: clamp(36px,10vw,60px); }
-  .stat-suf   { font-size: 28px; }
-  .port-title { font-size: 20px; }
-  .port-item  { gap: 10px; padding: 18px 16px; }
-  .about-quote p { font-size: 16px; }
-  .contact-form  { padding: 28px 18px; }
-  .hero-scroll   { display: none; }
-  footer         { padding: 28px 20px; }
-  nav#nav        { padding: 16px 20px; }
-  nav#nav.compact{ padding: 12px 20px; }
+  /* Nav */
+  nav#nav         { padding: 14px 20px; }
+  nav#nav.compact { padding: 11px 20px; }
+
+  /* Hero */
+  #hero           { min-height: 100svh; }
+  .hero-inner     { padding: 0 20px 96px; }
+  .hero-h1        { font-size: clamp(44px, 14vw, 76px); line-height: 0.92; margin-bottom: 24px; }
+  .hero-pre       { margin-bottom: 20px; }
+  .hero-pre span  { font-size: 9px; }
+  .hero-desc      { font-size: 13px; line-height: 1.75; }
+  .hero-scroll    { display: none; }
+  .btn            { padding: 14px 28px; font-size: 11px; letter-spacing: 0.14em; }
+
+  /* Sections */
+  .sec            { padding: 64px 20px; }
+  .sec-title      { font-size: clamp(36px, 11vw, 64px); }
+  .sec-label      { margin-bottom: 36px; }
+
+  /* Stats */
+  #stats          { padding: 48px 20px; }
+  .stats-grid     { grid-template-columns: 1fr 1fr; }
+  .stat-block     { padding: 24px 14px; }
+  .stat-num       { font-size: clamp(34px, 10vw, 56px); }
+  .stat-suf       { font-size: 26px; }
+  .stat-lbl       { font-size: 9px; letter-spacing: 0.18em; }
+  .stat-sub       { font-size: 11px; }
+
+  /* Portfolio */
+  .port-item      { grid-template-columns: 30px 1fr 20px; gap: 10px; padding: 18px 16px; }
+  .port-title     { font-size: 18px; }
+  .port-desc      { font-size: 12px; }
+  .port-tag       { font-size: 9px; }
+  .port-arrow     { font-size: 16px; }
+
+  /* Timeline */
+  .tl-item        { grid-template-columns: 60px 18px 1fr; gap: 0 10px; padding: 28px 0; }
+  .tl-item::before{ left: calc(60px + 10px + 8px); }
+  .tl-year        { font-size: 10px; letter-spacing: 0.12em; }
+  .tl-title       { font-size: 22px; }
+  .tl-desc        { font-size: 12px; }
+
+  /* About */
+  .about-txt      { font-size: 14px; }
+  .about-quote p  { font-size: 15px; }
+  .about-quote    { padding: 24px 20px; }
+
+  /* Skills */
+  .sk-bars        { gap: 28px; }
+  .sk-caption     { font-size: 14px; }
+  .tag            { padding: 8px 14px; font-size: 10px; }
+
+  /* Contact */
+  .contact-form   { padding: 24px 18px; }
+  .cf-title       { font-size: 30px; }
+  .c-name         { font-size: 13px; }
+  .c-icon         { width: 38px; height: 38px; font-size: 15px; }
+
+  /* Footer */
+  footer          { padding: 24px 20px; gap: 10px; }
+  .foot-logo      { font-size: 17px; }
 }
 
 @media (max-width: 420px) {
-  .hero-h1  { font-size: clamp(42px,13vw,66px); }
-  .btn      { padding: 13px 20px; font-size: 11px; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .stat-block { border-right: none !important; border-bottom: 1px solid rgba(242,240,235,0.07) !important; }
+  .hero-h1        { font-size: clamp(38px, 13vw, 56px); }
+  .stats-grid     { grid-template-columns: 1fr; }
+  .stat-block     { border-right: none !important; border-bottom: 1px solid rgba(242,240,235,0.07) !important; }
   .stat-block:last-child { border-bottom: none !important; }
   .port-item { grid-template-columns: 30px 1fr auto; }
 }
@@ -487,19 +587,19 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
     <div class="about-sticky">
       <h2 class="sec-title fade" style="margin-bottom:40px">WHO<br>I AM.</h2>
       <div class="about-txt fade d1">
-        <p>I'm Christian Groenewald — a <strong>Business Management student</strong> with a genuine passion for marketing. I'm the kind of person who gets obsessed with how brands are built, why people buy, and what makes a message actually land.</p>
-        <p>What sets me apart is my background: <strong>ten years competing in gymnastics</strong>, then coaching for nearly five more. That shaped me in ways a classroom never could — discipline, precision, the ability to perform under real pressure, and the instinct to lead others to their best.</p>
-        <p>Currently in my <strong>third year of studies</strong>, planning to push through to Honours. Every day I'm connecting the dots between athletic mindset and business strategy.</p>
+        <p>I'm <strong>Christian Groenewald</strong> — a 21-year-old <strong>3rd-year Business Management student</strong> at the <strong>University of Pretoria</strong>, with a genuine passion for marketing, strategy, and how great brands are built.</p>
+        <p>What sets me apart is my background: <strong>ten years competing in gymnastics</strong>, then four years coaching — holding <strong>2 formal coaching certifications</strong>. That shaped me in ways a classroom never could — discipline, precision, the ability to perform under real pressure, and the instinct to lead others to their best.</p>
+        <p>Currently in my <strong>third year at UP</strong>, I'm actively building real-world experience through web projects and planning to continue to Honours. Every day I'm connecting the dots between athletic mindset and business strategy.</p>
       </div>
       <div class="about-quote fade d2">
         <p>"The same focus that wins competitions builds careers. I'm just applying it to a bigger stage."</p>
       </div>
     </div>
     <div class="timeline">
-      <div class="tl-item fade"><div class="tl-dot"></div><div class="tl-year">2013–2023</div><div><div class="tl-title">Competitive Gymnastics</div><div class="tl-desc">A full decade of dedication, discipline and competition. Built the mental and physical foundation that still drives everything I do.</div></div></div>
-      <div class="tl-item fade d1"><div class="tl-dot"></div><div class="tl-year">2019–2024</div><div><div class="tl-title">Head Gymnastics Coach</div><div class="tl-desc">Transitioned from athlete to mentor. Coached gymnasts across multiple levels, earned formal certifications, and developed real leadership skills.</div></div></div>
-      <div class="tl-item fade d2"><div class="tl-dot"></div><div class="tl-year">2023</div><div><div class="tl-title">Matric — Class of 2023</div><div class="tl-desc">Completed my schooling and stepped into higher education, ready to build on everything the previous decade had taught me.</div></div></div>
-      <div class="tl-item fade d3"><div class="tl-dot"></div><div class="tl-year">2024–Now</div><div><div class="tl-title">Business Management Degree</div><div class="tl-desc">Third year in, with Honours firmly in my plans. Blending academic theory with a deep personal interest in marketing and brand strategy.</div></div></div>
+      <div class="tl-item fade"><div class="tl-year">2013–2023</div><div class="tl-dot"></div><div><div class="tl-title">Competitive Gymnastics</div><div class="tl-desc">A full decade of dedication, discipline and competition. Built the mental and physical foundation that still drives everything I do.</div></div></div>
+      <div class="tl-item fade d1"><div class="tl-year">2019–2023</div><div class="tl-dot"></div><div><div class="tl-title">Gymnastics Coach</div><div class="tl-desc">Transitioned from athlete to mentor. Coached gymnasts across multiple levels, earned 2 formal coaching certifications, and developed real leadership skills over 4 years.</div></div></div>
+      <div class="tl-item fade d2"><div class="tl-year">2019–2023</div><div class="tl-dot"></div><div><div class="tl-title">Hoërskool Garsfontein</div><div class="tl-desc">Completed my secondary schooling at Garsfontein, balancing competitive gymnastics and coaching alongside academics.</div></div></div>
+      <div class="tl-item fade d3"><div class="tl-year">2024–Now</div><div class="tl-dot"></div><div><div class="tl-title">Business Management — UP</div><div class="tl-desc">3rd year at the University of Pretoria, with Honours firmly in my plans. Blending academic theory with a deep personal interest in marketing and brand strategy.</div></div></div>
     </div>
   </div>
 </section>
@@ -508,9 +608,9 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
 <section id="stats">
   <div class="stats-grid">
     <div class="stat-block fade"><div class="stat-num"><span class="ctr" data-t="10">0</span><span class="stat-suf">+</span></div><div class="stat-lbl">Years as an Athlete</div><div class="stat-sub">A decade of elite gymnastics — competing, training, and performing at the highest level.</div></div>
-    <div class="stat-block fade d1"><div class="stat-num"><span class="ctr" data-t="4">0</span><span class="stat-suf">+</span></div><div class="stat-lbl">Years Coaching</div><div class="stat-sub">Certified coach with hands-on experience developing athletes and leading teams.</div></div>
-    <div class="stat-block fade d2"><div class="stat-num"><span class="ctr" data-t="3">0</span><span class="stat-suf">rd</span></div><div class="stat-lbl">Year of Degree</div><div class="stat-sub">Business Management, with an Honours degree on the horizon.</div></div>
-    <div class="stat-block fade d3"><div class="stat-num"><span class="ctr" data-t="2">0</span><span class="stat-suf">+</span></div><div class="stat-lbl">Coaching Certifications</div><div class="stat-sub">Formal qualifications earned alongside competing and now studying.</div></div>
+    <div class="stat-block fade d1"><div class="stat-num"><span class="ctr" data-t="4">0</span><span class="stat-suf"></span></div><div class="stat-lbl">Years Coaching</div><div class="stat-sub">Certified coach with hands-on experience developing athletes and leading teams.</div></div>
+    <div class="stat-block fade d2"><div class="stat-num"><span class="ctr" data-t="3">0</span><span class="stat-suf">rd</span></div><div class="stat-lbl">Year of Degree</div><div class="stat-sub">Business Management at UP, with an Honours degree on the horizon.</div></div>
+    <div class="stat-block fade d3"><div class="stat-num"><span class="ctr" data-t="2">0</span><span class="stat-suf"></span></div><div class="stat-lbl">Coaching Certifications</div><div class="stat-sub">Two formal coaching qualifications earned alongside competing and studying.</div></div>
   </div>
 </section>
 
@@ -524,11 +624,11 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
     <p class="port-note fade">Projects and work that reflect how I think, build, and execute.</p>
   </div>
   <div class="port-list">
-    <div class="port-item fade" data-tilt><div class="port-num">01</div><div><div class="port-tag">Marketing Strategy</div><div class="port-title">YOUR FEATURED PROJECT</div><div class="port-desc">Add your best campaign, business plan, or marketing strategy here.</div></div><div class="port-arrow">↗</div></div>
-    <div class="port-item fade d1" data-tilt><div class="port-num">02</div><div><div class="port-tag">Business</div><div class="port-title">UNIVERSITY PROJECT</div><div class="port-desc">A standout academic case study, business analysis, or research project from your degree.</div></div><div class="port-arrow">↗</div></div>
-    <div class="port-item fade d2" data-tilt><div class="port-num">03</div><div><div class="port-tag">Coaching</div><div class="port-title">COACHING PROGRAM DESIGN</div><div class="port-desc">The structured training and development system you built and ran as a gymnastics coach.</div></div><div class="port-arrow">↗</div></div>
-    <div class="port-item fade d3" data-tilt><div class="port-num">04</div><div><div class="port-tag">Marketing</div><div class="port-title">BRAND / SOCIAL CAMPAIGN</div><div class="port-desc">Any social media strategy, brand concept, or content campaign you've developed.</div></div><div class="port-arrow">↗</div></div>
-    <div class="port-item fade d4" data-tilt><div class="port-num">05</div><div><div class="port-tag">Personal</div><div class="port-title">YOUR FIFTH PROJECT</div><div class="port-desc">A personal project, side venture, or something you're building outside of university.</div></div><div class="port-arrow">↗</div></div>
+    <div class="port-item fade" data-tilt><div class="port-num">01</div><div><div class="port-tag">Web · Client Work</div><div class="port-title">BBYRA WEBSITE</div><div class="port-desc">A professional website built for BBYRA — link coming soon once live.</div></div><div class="port-arrow">↗</div></div>
+    <div class="port-item fade d1" data-tilt><div class="port-num">02</div><div><div class="port-tag">Web · Pro Bono</div><div class="port-title">BUSINESS WEBSITE (PRO BONO)</div><div class="port-desc">A fully custom website built free of charge for a local business — helping real brands grow online.</div></div><div class="port-arrow">↗</div></div>
+    <div class="port-item fade d2" data-tilt><div class="port-num">03</div><div><div class="port-tag">Business Management · UP</div><div class="port-title">ACADEMIC PROJECTS</div><div class="port-desc">Case studies, business analyses, and research projects completed as part of my degree at the University of Pretoria.</div></div><div class="port-arrow">↗</div></div>
+    <div class="port-item fade d3" data-tilt><div class="port-num">04</div><div><div class="port-tag">Professional Development</div><div class="port-title">INDUSTRY COURSES — COMING SOON</div><div class="port-desc">Actively pursuing certifications and courses aligned with my Business Management and Marketing study path.</div></div><div class="port-arrow">↗</div></div>
+    <div class="port-item fade d4" data-tilt><div class="port-num">05</div><div><div class="port-tag">Coaching</div><div class="port-title">GYMNASTICS COACHING — 4 YEARS</div><div class="port-desc">Designed and ran structured training programs for gymnasts across multiple levels, holding 2 formal coaching certifications.</div></div><div class="port-arrow">↗</div></div>
   </div>
 </section>
 
@@ -548,14 +648,37 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
       </div>
     </div>
     <div>
-      <p class="sk-caption fade">A rare blend of <strong>athletic discipline</strong> and <strong>commercial thinking</strong>. Forged on gym floors, refined in lecture halls — and always hungry to grow.</p>
-      <div class="tag-cloud fade d1">
-        <div class="tag">Marketing Strategy</div><div class="tag">Brand Development</div>
-        <div class="tag">Social Media</div><div class="tag">Business Management</div>
-        <div class="tag">Team Leadership</div><div class="tag">Coaching</div>
-        <div class="tag">Content Creation</div><div class="tag">Strategic Planning</div>
-        <div class="tag">Project Management</div><div class="tag">Public Speaking</div>
-        <div class="tag">Market Research</div><div class="tag">Consumer Behaviour</div>
+      <div class="sk-pullquote fade">
+        <p>"A rare blend of athletic discipline and commercial thinking. Forged on gym floors, refined in lecture halls — and always hungry to grow."</p>
+      </div>
+      <div class="sk-groups fade d1">
+        <div class="sk-group">
+          <div class="sk-group-hd"><div class="sk-group-line"></div><span class="sk-group-label">Business</span></div>
+          <div class="sk-chips">
+            <span class="sk-chip">Business Management</span>
+            <span class="sk-chip">Strategic Planning</span>
+            <span class="sk-chip">Project Management</span>
+            <span class="sk-chip">Market Research</span>
+            <span class="sk-chip">Consumer Behaviour</span>
+          </div>
+        </div>
+        <div class="sk-group">
+          <div class="sk-group-hd"><div class="sk-group-line"></div><span class="sk-group-label">Marketing</span></div>
+          <div class="sk-chips">
+            <span class="sk-chip">Marketing Strategy</span>
+            <span class="sk-chip">Brand Development</span>
+            <span class="sk-chip">Social Media</span>
+            <span class="sk-chip">Content Creation</span>
+          </div>
+        </div>
+        <div class="sk-group">
+          <div class="sk-group-hd"><div class="sk-group-line"></div><span class="sk-group-label">Leadership</span></div>
+          <div class="sk-chips">
+            <span class="sk-chip">Team Leadership</span>
+            <span class="sk-chip">Coaching</span>
+            <span class="sk-chip">Public Speaking</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -605,7 +728,7 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
 <!-- FOOTER -->
 <footer>
   <div class="foot-logo">CHRISTIAN <em>G.</em></div>
-  <div class="foot-copy">© 2025 Christian Groenewald. All rights reserved.</div>
+  <div class="foot-copy">© 2026 Christian Groenewald. All rights reserved.</div>
   <div class="foot-tag">Business · Marketing · Excellence</div>
 </footer>
 
@@ -664,14 +787,23 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
     setTimeout(function () { hs.style.cssText  = 'transition:opacity .8s;opacity:1'; }, 1200);
   }
 
-  /* ── CANVAS PARTICLES ── */
+  /* ── CANVAS PARTICLES (HiDPI-crisp) ── */
   var canvas = document.getElementById('hero-canvas');
   var ctx    = canvas.getContext('2d');
-  var W, H, pts = [], mx = -999, my = -999;
+  var W, H, DPR, pts = [], mx = -999, my = -999;
 
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+    DPR = window.devicePixelRatio || 1;
+    /* logical size from CSS */
+    var lw = canvas.offsetWidth, lh = canvas.offsetHeight;
+    /* physical pixels */
+    canvas.width  = lw * DPR;
+    canvas.height = lh * DPR;
+    /* keep CSS size unchanged */
+    canvas.style.width  = lw + 'px';
+    canvas.style.height = lh + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    W = lw; H = lh;
   }
   resize();
   var rd;
@@ -679,14 +811,23 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
 
   function Pt() { this.reset(); }
   Pt.prototype.reset = function () {
-    this.x  = Math.random() * W; this.y  = Math.random() * H;
-    this.vx = (Math.random() - .5) * .3; this.vy = (Math.random() - .5) * .3;
-    this.r  = Math.random() * 1.5 + .4;  this.a  = Math.random() * .35 + .08;
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.vx = (Math.random() - .5) * .35;
+    this.vy = (Math.random() - .5) * .35;
+    /* larger, more visible particles */
+    this.r  = Math.random() * 1.8 + 1.2;
+    this.a  = Math.random() * .45 + .18;
   };
   Pt.prototype.tick = function () {
     var dx = this.x - mx, dy = this.y - my, d = Math.sqrt(dx * dx + dy * dy);
-    if (d < 130 && d > 0) { var f = (130 - d) / 130 * .8; this.vx += (dx / d) * f * .05; this.vy += (dy / d) * f * .05; }
-    this.vx *= .98; this.vy *= .98; this.x += this.vx; this.y += this.vy;
+    if (d < 150 && d > 0) {
+      var f = (150 - d) / 150;
+      this.vx += (dx / d) * f * .06;
+      this.vy += (dy / d) * f * .06;
+    }
+    this.vx *= .97; this.vy *= .97;
+    this.x += this.vx; this.y += this.vy;
     if (this.x < 0) this.x = W; if (this.x > W) this.x = 0;
     if (this.y < 0) this.y = H; if (this.y > H) this.y = 0;
   };
@@ -697,18 +838,25 @@ footer { background-color: #0f0f0f; border-top: 1px solid rgba(242,240,235,0.07)
     ctx.fill();
   };
 
-  var count = window.innerWidth < 600 ? 55 : window.innerWidth < 900 ? 80 : 130;
+  var count = W < 600 ? 50 : W < 900 ? 75 : 120;
   for (var i = 0; i < count; i++) pts.push(new Pt());
 
+  var LINK_DIST = 130;
   function frame() {
     ctx.clearRect(0, 0, W, H);
+    /* draw connections */
     for (var a = 0; a < pts.length; a++) {
       for (var b = a + 1; b < pts.length; b++) {
-        var dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y, d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 110) {
-          ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y);
-          ctx.strokeStyle = 'rgba(200,245,62,' + ((1 - d / 110) * .07) + ')';
-          ctx.lineWidth = .5; ctx.stroke();
+        var dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+        var d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(pts[a].x, pts[a].y);
+          ctx.lineTo(pts[b].x, pts[b].y);
+          /* stronger opacity for visible lines */
+          ctx.strokeStyle = 'rgba(200,245,62,' + ((1 - d / LINK_DIST) * .18) + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
         }
       }
     }
